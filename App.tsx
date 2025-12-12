@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getCurriculum, UI_TEXT } from './constants';
 import { CEFRLevel, Language, Topic, AppState } from './types';
 import { ChatInterface } from './components/ChatInterface';
-import { BookOpen, MessageCircle, ChevronRight, Globe, Sparkles, Linkedin, Instagram, Github } from 'lucide-react';
+import { BookOpen, MessageCircle, ChevronRight, Globe, Sparkles, Linkedin, Github } from 'lucide-react';
+import { VisitCounter } from './components/VisitCounter';
 
 const App = () => {
   const [state, setState] = useState<AppState>({
@@ -61,7 +62,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen font-sans text-slate-800 relative bg-slate-50">
-      
+
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
         <header className="bg-white/80 backdrop-blur-md border-b border-slate-200/50 sticky top-0 z-30 transition-all">
@@ -72,24 +73,24 @@ const App = () => {
               </div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 hidden sm:block">
-                  {t.appTitle.split(' ')[0]} 
+                  {t.appTitle.split(' ')[0]}
                 </h1>
-                 {/* Flag */}
-                 <img 
-                    src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" 
-                    alt="France Flag" 
-                    className="h-4 w-6 rounded-sm shadow-sm object-cover"
-                  />
-                 <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 hidden sm:block">
+                {/* Flag */}
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg"
+                  alt="France Flag"
+                  className="h-4 w-6 rounded-sm shadow-sm object-cover"
+                />
+                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 hidden sm:block">
                   {t.appTitle.split(' ').slice(1).join(' ')}
                 </h1>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               {/* Language Toggle - Only visible on HOME */}
               {state.currentView === 'HOME' && (
-                <button 
+                <button
                   onClick={toggleLanguage}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white hover:bg-slate-100 border border-slate-200 hover:border-indigo-300 transition-all text-sm font-bold text-slate-800 shadow-sm"
                 >
@@ -102,7 +103,7 @@ const App = () => {
         </header>
 
         <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex-grow w-full">
-          
+
           {/* VIEW: HOME */}
           {state.currentView === 'HOME' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -123,7 +124,7 @@ const App = () => {
                     className="group relative bg-white hover:bg-white/90 border border-slate-200 hover:border-indigo-300 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 text-left flex flex-col gap-4 overflow-hidden"
                   >
                     <div className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full opacity-10 ${level.color}`}></div>
-                    
+
                     <div className="flex items-start justify-between">
                       <div>
                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold text-white mb-2 ${level.color}`}>
@@ -138,7 +139,7 @@ const App = () => {
                       </div>
                       <BookOpen className="w-8 h-8 text-slate-400 group-hover:text-indigo-600 transition-colors" />
                     </div>
-                    
+
                     <div className="pt-4 border-t border-slate-100 mt-auto">
                       <p className="text-slate-600 text-sm leading-relaxed font-medium">
                         {t.levelDesc[level.id].split('. ').slice(1).join('. ')}
@@ -170,7 +171,7 @@ const App = () => {
 
               <div className="grid grid-cols-1 gap-4">
                 {currentLevelData.topics.map((topic, index) => (
-                  <div 
+                  <div
                     key={topic.id}
                     onClick={() => handleTopicSelect(topic)}
                     className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:border-indigo-400 transition-all cursor-pointer flex items-center justify-between group"
@@ -201,7 +202,7 @@ const App = () => {
           {state.currentView === 'TOPIC_CHAT' && state.selectedTopic && state.selectedLevel && (
             <div className="animate-in zoom-in-95 duration-300">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
+
                 {/* Context Panel */}
                 <div className="lg:col-span-1 space-y-4">
                   <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
@@ -209,7 +210,7 @@ const App = () => {
                       <ChevronRight className="w-4 h-4 rotate-180 mr-1" />
                       {t.back}
                     </button>
-                    
+
                     <div className="mb-6">
                       <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold text-white mb-2 ${curriculum.find(l => l.id === state.selectedLevel)?.color}`}>
                         {state.selectedLevel}
@@ -229,7 +230,7 @@ const App = () => {
                           {state.selectedTopic.objective}
                         </p>
                       </div>
-                      
+
                       <p className="text-sm text-slate-600 italic">
                         {state.selectedTopic.description}
                       </p>
@@ -239,7 +240,7 @@ const App = () => {
 
                 {/* Chat Interface */}
                 <div className="lg:col-span-2">
-                  <ChatInterface 
+                  <ChatInterface
                     level={state.selectedLevel}
                     topic={state.selectedTopic}
                     uiLanguage={state.uiLanguage}
@@ -264,22 +265,15 @@ const App = () => {
                 This project was created by David Estrada 2026-2030.
               </p>
             </div>
-            
+
             <div className="flex items-center gap-4">
-              <a href="#" className="text-slate-500 hover:text-indigo-600 transition-colors">
+              <VisitCounter />
+              <div className="w-px h-4 bg-slate-300 mx-2"></div>
+              <a href="https://www.linkedin.com/in/davidestrada101/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-indigo-600 transition-colors">
                 <Linkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="text-slate-500 hover:text-pink-600 transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-slate-500 hover:text-slate-900 transition-colors">
+              <a href="https://github.com/TalentCode1" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-900 transition-colors">
                 <Github className="w-5 h-5" />
-              </a>
-              <a 
-                href="#" 
-                className="px-4 py-1.5 bg-slate-800 text-white text-xs font-bold rounded-full hover:bg-slate-900 transition-colors"
-              >
-                Contact
               </a>
             </div>
           </div>
