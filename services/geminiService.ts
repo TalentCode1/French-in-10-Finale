@@ -11,7 +11,7 @@ const getSystemInstruction = (
   uiLanguage: Language
 ): string => {
   const userLangName = uiLanguage === 'ES' ? 'Spanish' : 'English';
-  
+
   return `
 You are an expert French language tutor named "David".
 Your Goal: Teach the user French at the CEFR level "${level}".
@@ -51,9 +51,9 @@ export const createChatSession = async (
   }
 
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
+
   const chat = ai.chats.create({
-    model: 'gemini-2.5-flash', // Using flash for speed and cost-effectiveness in a tutor scenario
+    model: 'gemini-1.5-flash', // Using flash for speed and cost-effectiveness in a tutor scenario
     config: {
       temperature: 0.7, // Balance between creativity in examples and strict adherence to rules
       systemInstruction: getSystemInstruction(level, topic, uiLanguage),
