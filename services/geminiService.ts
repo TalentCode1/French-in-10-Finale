@@ -53,7 +53,7 @@ export const createChatSession = async (
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const chat = ai.chats.create({
-    model: 'gemini-1.5-flash', // Using flash for speed and cost-effectiveness in a tutor scenario
+    model: 'gemini-1.5-flash-001', // Explicit version for v1beta compatibility
     config: {
       temperature: 0.7, // Balance between creativity in examples and strict adherence to rules
       systemInstruction: getSystemInstruction(level, topic, uiLanguage),
@@ -69,11 +69,10 @@ export const sendMessageToTutor = async (
 ): Promise<string> => {
   try {
     const result: GenerateContentResponse = await chat.sendMessage({ message });
-    return result.text || "Désolé, je n'ai pas compris. (Error generating response)";
+    return result.text || "Désolé, je n'ai pas compris. (Empty response)";
   } catch (error) {
     console.error("Gemini Error:", error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Gemini Error Details:", error);
-    return `Error: ${errorMessage}. (Check API Key/Network)`;
+    // Return a friendly message to the user, but log the real error above
+    return "Je suis désolé, j'ai des problèmes de connexion. (Please try again later)";
   }
 };
