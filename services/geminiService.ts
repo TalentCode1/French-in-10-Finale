@@ -45,17 +45,19 @@ export const createChatSession = async (
   topic: Topic,
   uiLanguage: Language
 ): Promise<Chat> => {
-  // Ensure API Key is available
-  if (!process.env.API_KEY) {
-    throw new Error("API Key is missing.");
+  // Use Vite's import.meta.env for reliable environment variable access
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("API Key is missing. Check .env and VITE_GEMINI_API_KEY.");
   }
 
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey });
 
   const chat = ai.chats.create({
-    model: 'gemini-1.5-flash-001', // Explicit version for v1beta compatibility
+    model: 'gemini-1.5-flash', // Standard alias for the stable Flash model
     config: {
-      temperature: 0.7, // Balance between creativity in examples and strict adherence to rules
+      temperature: 0.7,
       systemInstruction: getSystemInstruction(level, topic, uiLanguage),
     },
   });
@@ -70,9 +72,14 @@ export const sendMessageToTutor = async (
   try {
     const result: GenerateContentResponse = await chat.sendMessage({ message });
     return result.text || "Désolé, je n'ai pas compris. (Empty response)";
-  } catch (error) {
+  } catch (error: any) {
     console.error("Gemini Error:", error);
-    // Return a friendly message to the user, but log the real error above
-    return "Je suis désolé, j'ai des problèmes de connexion. (Please try again later)";
+
+    // Robust Error Handling for User
+    if (error.message && error.message.includes("429")) {
+      return "Le serveur est très occupé (Server Busy/Quota Exceeded). Attendez s'il vous plaît 10 secondes...";
+    }
+
+    return "Problème de connexion temporaire. Réessayez.";
   }
 };
