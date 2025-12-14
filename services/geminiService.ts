@@ -72,6 +72,8 @@ export const sendMessageToTutor = async (
     return result.text || "Désolé, je n'ai pas compris. (Error generating response)";
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "Connection error. Please check your internet or API key.";
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Gemini Error Details:", error);
+    return `Error: ${errorMessage}. (Check API Key/Network)`;
   }
 };
